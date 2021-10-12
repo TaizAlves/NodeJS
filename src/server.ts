@@ -1,10 +1,12 @@
-import express, { request, response } from 'express';
+import express, { Request, Response, NextFunction} from 'express';
+import "express-async-errors"
 import swaggerUi from 'swagger-ui-express';
 
 import "./database";
 
 import "./shared/container";
 
+import { appError } from './errors/appError';
 import { router } from './routes';
 import swaggerFile from "./swagger.json";
 
@@ -18,5 +20,19 @@ app.use("*/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 
 app.use(router);
+
+app.use((err: Error, request: Request, response: Response, next: NextFunction) => {
+    if (err instanceof appError){
+        return response.status(err.statusCode).json({
+            message: err.message
+        })
+    }
+
+    return response.status(500).json({
+        status: "error",
+        message: `Internal server Error - ${err.message}`,
+    });
+})
+
 
 app.listen(3333, () => console.log("Service is running"));

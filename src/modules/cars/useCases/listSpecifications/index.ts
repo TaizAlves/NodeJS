@@ -4,7 +4,7 @@ import { ListSpecificationsUseCase } from "./ListSpecificationsUseCase";
 
 
 
-const specificationsRepository = SpecificationsRepository.getInstance();
+const specificationsRepository = null;
 const listspecificationUseCase = new ListSpecificationsUseCase(specificationsRepository);
 const listspecificationController = new ListSpecificationsController(listspecificationUseCase);
 
